@@ -1,21 +1,22 @@
 import { describe, it, expect } from 'vitest'
-import type { Match, Participant, Prediction, Score } from '../index'
+import { PHASE_LABELS, PHASES_KNOCKOUT, GROUP_DEADLINE, COPA_START_DATE } from '../copa2026'
+import type { Phase } from '../index'
 
-describe('Types', () => {
-  it('Match has required fields', () => {
-    const match: Match = {
-      id: 'm1',
-      phase: 'groups',
-      group: 'A',
-      homeTeam: 'Brasil',
-      awayTeam: 'Croácia',
-      homeScore: null,
-      awayScore: null,
-      kickoff: new Date('2026-06-12T18:00:00-03:00'),
-      status: 'scheduled',
-      deadline: new Date('2026-06-11T23:59:00-03:00'),
-      apiId: '12345',
+const ALL_PHASES: Phase[] = ['groups', 'r32', 'r16', 'qf', 'sf', '3rd', 'final']
+
+describe('copa2026 constants', () => {
+  it('PHASE_LABELS has an entry for every Phase', () => {
+    for (const phase of ALL_PHASES) {
+      expect(PHASE_LABELS[phase], `Missing label for phase: ${phase}`).toBeTruthy()
     }
-    expect(match.phase).toBe('groups')
+  })
+
+  it('PHASES_KNOCKOUT contains all non-group phases', () => {
+    expect(PHASES_KNOCKOUT).toHaveLength(6)
+    expect(PHASES_KNOCKOUT).not.toContain('groups')
+  })
+
+  it('GROUP_DEADLINE is before COPA_START_DATE', () => {
+    expect(GROUP_DEADLINE.getTime()).toBeLessThan(COPA_START_DATE.getTime())
   })
 })

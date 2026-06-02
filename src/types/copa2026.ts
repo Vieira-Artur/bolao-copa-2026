@@ -10,7 +10,7 @@ export const GROUP_DEADLINE = new Date('2026-06-11T16:00:00Z')  // 1h before fir
 
 export const PHASES_KNOCKOUT: Array<import('./index').Phase> = ['r32', 'r16', 'qf', 'sf', '3rd', 'final']
 
-export const PHASE_LABELS: Record<string, string> = {
+export const PHASE_LABELS: Record<import('./index').Phase, string> = {
   groups: 'Fase de Grupos',
   r32: '16 Avos de Final',
   r16: 'Oitavas de Final',
