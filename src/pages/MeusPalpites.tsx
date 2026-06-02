@@ -4,6 +4,7 @@ import { useParticipantByToken } from '../hooks/useParticipant'
 import { useMatches } from '../hooks/useMatches'
 import { usePredictions } from '../hooks/usePredictions'
 import { GroupsForm } from '../components/predictions/GroupsForm'
+import { ClassificationForm } from '../components/predictions/ClassificationForm'
 import { GROUP_DEADLINE } from '../types/copa2026'
 
 export function MeusPalpites() {
@@ -84,9 +85,10 @@ export function MeusPalpites() {
         )}
 
         {tab === 'classificacao' && (
-          <div className="text-center py-8 text-gray-400">
-            Classificação & Artilheiro — em construção (Task 9)
-          </div>
+          <ClassificationForm
+            participantId={participant!.id}
+            locked={new Date() >= GROUP_DEADLINE}
+          />
         )}
       </div>
     </div>
