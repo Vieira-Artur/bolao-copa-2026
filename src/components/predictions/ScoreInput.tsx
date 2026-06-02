@@ -7,57 +7,75 @@ interface Props {
   onChange: (value: { home?: number; away?: number }) => void
 }
 
-export function ScoreInput({
-  homeTeam,
-  awayTeam,
-  homeScore,
-  awayScore,
-  locked,
-  onChange,
-}: Props) {
-  const inputClass = `w-12 h-10 text-center text-lg font-bold border-2 rounded-lg ${
-    locked
-      ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
-      : 'border-green-300 focus:border-green-500 focus:outline-none'
-  }`
-
+export function ScoreInput({ homeTeam, awayTeam, homeScore, awayScore, locked, onChange }: Props) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-right flex-1 truncate">{homeTeam}</span>
-      <label htmlFor={`score-home-${homeTeam}`} className="sr-only">
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <label htmlFor={`score-home-${homeTeam}`} className="sr-only">{homeTeam}</label>
+      <span style={{
+        flex: 1,
+        textAlign: 'right',
+        fontFamily: 'var(--font-body)',
+        fontWeight: 600,
+        fontSize: '0.88rem',
+        color: 'var(--text)',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}>
         {homeTeam}
-      </label>
+      </span>
+
       <input
         id={`score-home-${homeTeam}`}
+        aria-label={homeTeam}
         type="number"
         min={0}
         max={20}
         value={homeScore ?? ''}
         disabled={locked}
-        className={inputClass}
+        className="score-input"
         onChange={e => {
           const v = e.target.value === '' ? undefined : parseInt(e.target.value, 10)
           onChange({ home: v, away: awayScore })
         }}
       />
-      <span className="text-gray-400 font-bold">×</span>
-      <label htmlFor={`score-away-${awayTeam}`} className="sr-only">
-        {awayTeam}
-      </label>
+
+      <span style={{
+        fontFamily: 'var(--font-display)',
+        fontWeight: 700,
+        fontSize: '1rem',
+        color: 'var(--text-faint)',
+      }}>×</span>
+
       <input
         id={`score-away-${awayTeam}`}
+        aria-label={awayTeam}
         type="number"
         min={0}
         max={20}
         value={awayScore ?? ''}
         disabled={locked}
-        className={inputClass}
+        className="score-input"
         onChange={e => {
           const v = e.target.value === '' ? undefined : parseInt(e.target.value, 10)
           onChange({ home: homeScore, away: v })
         }}
       />
-      <span className="text-sm font-medium text-left flex-1 truncate">{awayTeam}</span>
+
+      <label htmlFor={`score-away-${awayTeam}`} className="sr-only">{awayTeam}</label>
+      <span style={{
+        flex: 1,
+        textAlign: 'left',
+        fontFamily: 'var(--font-body)',
+        fontWeight: 600,
+        fontSize: '0.88rem',
+        color: 'var(--text)',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}>
+        {awayTeam}
+      </span>
     </div>
   )
 }

@@ -13,14 +13,9 @@ interface Props {
 export function GroupsForm({ participantId, matches, existing, deadline }: Props) {
   const locked = new Date() >= deadline
 
-  const [localPreds, setLocalPreds] = useState<
-    Record<string, { home?: number; away?: number }>
-  >(() =>
-    Object.fromEntries(
-      Object.entries(existing).map(([id, p]) => [
-        id,
-        { home: p.homeScore, away: p.awayScore },
-      ])
+  const [localPreds, setLocalPreds] = useState<Record<string, { home?: number; away?: number }>>(
+    () => Object.fromEntries(
+      Object.entries(existing).map(([id, p]) => [id, { home: p.homeScore, away: p.awayScore }])
     )
   )
   const [saving, setSaving] = useState<string | null>(null)
@@ -32,59 +27,83 @@ export function GroupsForm({ participantId, matches, existing, deadline }: Props
     const pred = localPreds[match.id]
     if (pred?.home === undefined || pred?.away === undefined) return
     setSaving(match.id)
-    await saveMatchPrediction(participantId, match.id, {
-      homeScore: pred.home,
-      awayScore: pred.away,
-    })
+    await saveMatchPrediction(participantId, match.id, { homeScore: pred.home, awayScore: pred.away })
     setSaving(null)
     setSaved(s => ({ ...s, [match.id]: true }))
   }
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {locked && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800">
+        <div style={{
+          background: 'rgba(251,191,36,0.08)',
+          border: '1px solid rgba(251,191,36,0.25)',
+          borderRadius: '10px',
+          padding: '0.75rem 1rem',
+          fontFamily: 'var(--font-body)',
+          fontSize: '0.83rem',
+          color: '#FBBF24',
+        }}>
           Prazo encerrado — palpites da fase de grupos bloqueados.
         </div>
       )}
+
       {groups.map(group => (
         <div key={group}>
-          <h3 className="font-bold text-green-900 mb-3">Grupo {group}</h3>
-          <div className="space-y-3">
-            {matches
-              .filter(m => m.group === group)
-              .map(match => (
-                <div
-                  key={match.id}
-                  className="bg-white border border-gray-200 rounded-lg px-4 py-3"
-                >
-                  <ScoreInput
-                    homeTeam={match.homeTeam}
-                    awayTeam={match.awayTeam}
-                    homeScore={localPreds[match.id]?.home}
-                    awayScore={localPreds[match.id]?.away}
-                    locked={locked}
-                    onChange={v => {
-                      setLocalPreds(p => ({ ...p, [match.id]: v }))
-                      setSaved(s => ({ ...s, [match.id]: false }))
-                    }}
-                  />
-                  {!locked && (
-                    <div className="mt-2 flex justify-end gap-2 items-center">
-                      {saved[match.id] && (
-                        <span className="text-xs text-green-600">Salvo!</span>
-                      )}
-                      <button
-                        onClick={() => handleSave(match)}
-                        disabled={saving === match.id}
-                        className="text-xs bg-green-700 text-white px-3 py-1 rounded hover:bg-green-800 disabled:opacity-50"
-                      >
-                        {saving === match.id ? 'Salvando...' : 'Salvar'}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
+          <div style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: '0.7rem',
+            fontWeight: 600,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--green)',
+            marginBottom: '0.6rem',
+          }}>
+            Grupo {group}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {matches.filter(m => m.group === group).map(match => (
+              <div key={match.id} className="copa-card" style={{ padding: '0.75rem 1rem' }}>
+                <ScoreInput
+                  homeTeam={match.homeTeam}
+                  awayTeam={match.awayTeam}
+                  homeScore={localPreds[match.id]?.home}
+                  awayScore={localPreds[match.id]?.away}
+                  locked={locked}
+                  onChange={v => {
+                    setLocalPreds(p => ({ ...p, [match.id]: v }))
+                    setSaved(s => ({ ...s, [match.id]: false }))
+                  }}
+                />
+                {!locked && (
+                  <div style={{
+                    marginTop: '0.5rem',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}>
+                    {saved[match.id] && (
+                      <span style={{
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.72rem',
+                        color: 'var(--green)',
+                      }}>
+                        ✓ Salvo
+                      </span>
+                    )}
+                    <button
+                      className="copa-btn"
+                      onClick={() => handleSave(match)}
+                      disabled={saving === match.id}
+                      style={{ padding: '0.3rem 0.8rem', fontSize: '0.7rem' }}
+                    >
+                      {saving === match.id ? 'Salvando...' : 'Salvar'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       ))}

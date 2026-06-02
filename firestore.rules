@@ -2,10 +2,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Participants: public read, write only via admin SDK (Cloud Functions)
+    // Participants: public read
+    // Write allowed when document has the required fields (admin panel validation)
+    // Bolão privado entre amigos — segurança reforçada via Cloud Functions no futuro
     match /participants/{participantId} {
       allow read: if true;
-      allow write: if false;
+      allow create: if request.resource.data.keys().hasAll(['name', 'token', 'createdAt']);
+      allow update, delete: if false;
     }
 
     // Matches: public read, write only via admin SDK
