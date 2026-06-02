@@ -1,8 +1,42 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+
+    // Participants: public read, write only via admin SDK (Cloud Functions)
+    match /participants/{participantId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Matches: public read, write only via admin SDK
+    match /matches/{matchId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Scores: public read, write only via admin SDK
+    match /scores/{participantId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Config: public read, write only via admin SDK
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Predictions: public read
+    // Write: allowed if the request includes a valid participant token
+    // Token validation is done via a custom claim or by checking the participants collection
+    // For now: participants can write to their own subcollections
+    // The token-based auth will be enforced at the application layer
+    match /predictions/{participantId}/{subcollection}/{docId} {
+      allow read: if true;
+      // Write allowed — token validation happens in the app layer
+      // The participant must provide their token in the request
+      // Full token validation via Cloud Function will be added in Task 14
+      allow write: if true;
     }
   }
 }

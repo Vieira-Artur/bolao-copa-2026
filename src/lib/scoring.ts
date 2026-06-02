@@ -128,7 +128,7 @@ export function calcArtilheiroPoints(
 export function getScoreType(
   prediction: Score,
   real: Score,
-  phase: Phase
+  _phase: Phase
 ): ScoreType {
   const predResult = calcMatchResult(prediction.h, prediction.a)
   const realResult = calcMatchResult(real.h, real.a)
