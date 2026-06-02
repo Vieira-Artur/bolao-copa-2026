@@ -34,3 +34,5 @@ functions/node_modules
 # Superpowers artifacts
 .superpowers/
 serviceAccount.json
+functions/lib/
+functions/node_modules/
