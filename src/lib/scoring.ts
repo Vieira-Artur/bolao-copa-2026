@@ -59,10 +59,9 @@ export function calcMatchPoints(
 
   if (prediction.h === real.h && prediction.a === real.a) return exact
 
-  // Goal-diff tier only applies when the margin is strictly greater than 1
-  const realDiff = Math.abs(real.h - real.a)
+  // Goal-diff tier: same signed difference (not applicable to draws, already handled above)
   const predDiff = real.h - real.a === prediction.h - prediction.a
-  if (predDiff && realDiff > 1) return goalDiff
+  if (predDiff) return goalDiff
 
   if (prediction.h === real.h || prediction.a === real.a) return oneScore
   return result
@@ -137,11 +136,10 @@ export function getScoreType(
   if (predResult !== realResult) return 'miss'
   if (prediction.h === real.h && prediction.a === real.a) return 'exact'
 
-  // Goal-diff tier never applies to draws, and only when margin > 1
+  // Goal-diff tier: same signed difference, never applies to draws
   if (
     realResult !== 'draw' &&
-    real.h - real.a === prediction.h - prediction.a &&
-    Math.abs(real.h - real.a) > 1
+    real.h - real.a === prediction.h - prediction.a
   ) return 'goalDiff'
 
   if (prediction.h === real.h || prediction.a === real.a) return 'oneScore'

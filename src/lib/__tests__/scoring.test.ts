@@ -21,6 +21,8 @@ describe('calcMatchPoints — groups phase', () => {
   it('result + goal diff = 6 pts (not draw)', () => {
     // Predicted 3-1, result 2-0 → same diff (+2), same result (home win) → 6
     expect(calcMatchPoints({ h: 3, a: 1 }, { h: 2, a: 0 }, 'groups')).toBe(6)
+    // Predicted 1-0, result 3-2 → same diff (+1), same result → 6 (literal rule)
+    expect(calcMatchPoints({ h: 1, a: 0 }, { h: 3, a: 2 }, 'groups')).toBe(6)
   })
   it('goal diff rule does NOT apply to draws', () => {
     // Predicted 0-0, result 1-1 → diff = 0 in both, but draw → should be 4, NOT 6
@@ -35,8 +37,8 @@ describe('calcMatchPoints — groups phase', () => {
     expect(calcMatchPoints({ h: 3, a: 0 }, { h: 3, a: 1 }, 'groups')).toBe(5)
   })
   it('result only = 4 pts', () => {
-    // Predicted 1-0, result 3-2 → home win matches, no scores match
-    expect(calcMatchPoints({ h: 1, a: 0 }, { h: 3, a: 2 }, 'groups')).toBe(4)
+    // Predicted 1-0 (diff=1), result 3-1 (diff=2) → home win matches, different margins, no scores match
+    expect(calcMatchPoints({ h: 1, a: 0 }, { h: 3, a: 1 }, 'groups')).toBe(4)
   })
   it('wrong result = 0 pts', () => {
     expect(calcMatchPoints({ h: 1, a: 0 }, { h: 0, a: 1 }, 'groups')).toBe(0)
@@ -70,10 +72,12 @@ describe('calcMatchPoints — knockout phases', () => {
     expect(calcMatchPoints({ h: 2, a: 1 }, { h: 3, a: 1 }, 'qf')).toBe(9)  // 5 * 2 - 1? No, 9 doesn't fit ×2
   })
   it('sf result only = 6 pts', () => {
-    expect(calcMatchPoints({ h: 1, a: 0 }, { h: 3, a: 2 }, 'sf')).toBe(6)  // wait: 4 * 2 = 8, not 6
+    // Predicted 1-0 (diff=1), result 3-1 (diff=2) → home win matches, different margins, no scores match
+    expect(calcMatchPoints({ h: 1, a: 0 }, { h: 3, a: 1 }, 'sf')).toBe(6)
   })
   it('3rd place result only = 6 pts', () => {
-    expect(calcMatchPoints({ h: 1, a: 0 }, { h: 3, a: 2 }, '3rd')).toBe(6)
+    // Predicted 1-0 (diff=1), result 3-1 (diff=2) → home win matches, different margins, no scores match
+    expect(calcMatchPoints({ h: 1, a: 0 }, { h: 3, a: 1 }, '3rd')).toBe(6)
   })
   it('final exact score = 16 pts', () => {
     expect(calcMatchPoints({ h: 2, a: 1 }, { h: 2, a: 1 }, 'final')).toBe(16)
@@ -201,12 +205,16 @@ describe('getScoreType', () => {
     expect(getScoreType({ h: 2, a: 1 }, { h: 3, a: 1 }, 'groups')).toBe('oneScore')
   })
   it('result only → "result"', () => {
-    expect(getScoreType({ h: 1, a: 0 }, { h: 3, a: 2 }, 'groups')).toBe('result')
+    // Predicted 1-0 (diff=1), result 3-1 (diff=2) → same winner, different margins, no scores match
+    expect(getScoreType({ h: 1, a: 0 }, { h: 3, a: 1 }, 'groups')).toBe('result')
   })
   it('wrong result → "miss"', () => {
     expect(getScoreType({ h: 1, a: 0 }, { h: 0, a: 1 }, 'groups')).toBe('miss')
   })
   it('draw result only → "result" (not goalDiff)', () => {
     expect(getScoreType({ h: 0, a: 0 }, { h: 1, a: 1 }, 'groups')).toBe('result')
+  })
+  it('result + goal diff (1-goal margin) → "goalDiff"', () => {
+    expect(getScoreType({ h: 1, a: 0 }, { h: 3, a: 2 }, 'groups')).toBe('goalDiff')
   })
 })
