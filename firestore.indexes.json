@@ -15,13 +15,6 @@
         { "fieldPath": "group", "order": "ASCENDING" },
         { "fieldPath": "kickoff", "order": "ASCENDING" }
       ]
-    },
-    {
-      "collectionGroup": "scores",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "total", "order": "DESCENDING" }
-      ]
     }
   ],
   "fieldOverrides": []
