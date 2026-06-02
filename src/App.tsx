@@ -1,11 +1,23 @@
-function App() {
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Layout } from './components/layout/Layout'
+import { Ranking } from './pages/Ranking'
+import { Participante } from './pages/Participante'
+import { MeusPalpites } from './pages/MeusPalpites'
+import { Jogos } from './pages/Jogos'
+import { Admin } from './pages/Admin'
+
+export function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <h1 className="text-3xl font-bold text-gray-800">
-        Bolão dos Corneteiros — Copa 2026
-      </h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Ranking />} />
+          <Route path="/participante/:nome" element={<Participante />} />
+          <Route path="/jogos" element={<Jogos />} />
+        </Route>
+        <Route path="/p/:token" element={<MeusPalpites />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
-
-export default App
