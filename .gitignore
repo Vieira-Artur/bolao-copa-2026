@@ -30,3 +30,6 @@ dist-ssr
 # Firebase
 functions/node_modules
 .firebase/
+
+# Superpowers artifacts
+.superpowers/
