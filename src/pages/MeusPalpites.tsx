@@ -5,14 +5,16 @@ import { useMatches } from '../hooks/useMatches'
 import { usePredictions } from '../hooks/usePredictions'
 import { GroupsForm } from '../components/predictions/GroupsForm'
 import { ClassificationForm } from '../components/predictions/ClassificationForm'
+import { KnockoutForm } from '../components/predictions/KnockoutForm'
 import { GROUP_DEADLINE } from '../types/copa2026'
 
 export function MeusPalpites() {
   const { token } = useParams<{ token: string }>()
   const { participant, loading, notFound } = useParticipantByToken(token)
-  const { matches, loading: loadingMatches } = useMatches('groups')
+  const { matches: groupMatches, loading: loadingMatches } = useMatches('groups')
+  const { matches: allMatches } = useMatches()
   const { predictions, loading: loadingPreds } = usePredictions(participant?.id)
-  const [tab, setTab] = useState<'jogos' | 'classificacao'>('jogos')
+  const [tab, setTab] = useState<'jogos' | 'classificacao' | 'matamata'>('jogos')
 
   if (loading) {
     return (
@@ -53,6 +55,7 @@ export function MeusPalpites() {
             [
               { value: 'jogos', label: 'Fase de Grupos' },
               { value: 'classificacao', label: 'Classificação & Artilheiro' },
+              { value: 'matamata', label: 'Mata-Matas' },
             ] as const
           ).map(t => (
             <button
@@ -76,7 +79,7 @@ export function MeusPalpites() {
             ) : (
               <GroupsForm
                 participantId={participant!.id}
-                matches={matches}
+                matches={groupMatches}
                 existing={predictions}
                 deadline={GROUP_DEADLINE}
               />
@@ -88,6 +91,14 @@ export function MeusPalpites() {
           <ClassificationForm
             participantId={participant!.id}
             locked={new Date() >= GROUP_DEADLINE}
+          />
+        )}
+
+        {tab === 'matamata' && (
+          <KnockoutForm
+            participantId={participant!.id}
+            matches={allMatches}
+            existing={predictions}
           />
         )}
       </div>
