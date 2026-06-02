@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── DESIGN TOKENS ─────────────────────────────────────────────────── */
-:root {
+/* ─── DARK THEME (default) ───────────────────────────────────────────── */
+:root, [data-theme="dark"] {
   --bg:           #07111D;
   --surface:      #0C1B2E;
   --card:         #111F33;
@@ -24,28 +24,56 @@
   --text-muted:   rgba(232, 239, 255, 0.50);
   --text-faint:   rgba(232, 239, 255, 0.28);
 
-  --font-display: 'Oswald', sans-serif;
-  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --header-bg:        linear-gradient(180deg, #060E1A 0%, #0A1828 100%);
+  --header-border:    rgba(0, 209, 102, 0.12);
+  --icon-bg:          linear-gradient(135deg, #00D166 0%, #00A050 100%);
+  --score-bg:         #0C1B2E;
+  --grass-color:      rgba(0, 209, 102, 0.025);
+}
 
-  --radius:       12px;
-  --radius-sm:    8px;
+/* ─── LIGHT THEME ────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:           #EEF2F7;
+  --surface:      #FFFFFF;
+  --card:         #FFFFFF;
+  --card-hover:   #F4F8FF;
+  --border:       rgba(0, 0, 0, 0.08);
+  --border-light: rgba(0, 0, 0, 0.14);
+
+  --green:        #009A4D;
+  --green-dim:    rgba(0, 154, 77, 0.10);
+  --green-glow:   rgba(0, 154, 77, 0.20);
+
+  --gold:         #B07A00;
+  --gold-dim:     rgba(176, 122, 0, 0.12);
+  --silver:       #6B7A8D;
+  --bronze:       #9B5E2A;
+
+  --text:         #0A1628;
+  --text-muted:   rgba(10, 22, 40, 0.55);
+  --text-faint:   rgba(10, 22, 40, 0.30);
+
+  --header-bg:        linear-gradient(180deg, #FFFFFF 0%, #F4F8FF 100%);
+  --header-border:    rgba(0, 154, 77, 0.18);
+  --icon-bg:          linear-gradient(135deg, #009A4D 0%, #007A3D 100%);
+  --score-bg:         #F0F4F9;
+  --grass-color:      rgba(0, 154, 77, 0.04);
 }
 
 /* ─── BASE ───────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: var(--font-body);
+  font-family: 'Plus Jakarta Sans', sans-serif;
   background-color: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  /* subtle grass-grid texture */
   background-image:
-    linear-gradient(rgba(0, 209, 102, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 209, 102, 0.025) 1px, transparent 1px);
+    linear-gradient(var(--grass-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grass-color) 1px, transparent 1px);
   background-size: 48px 48px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* ─── SCROLLBAR ──────────────────────────────────────────────────────── */
@@ -53,14 +81,11 @@ body {
 ::-webkit-scrollbar-track { background: var(--surface); }
 ::-webkit-scrollbar-thumb { background: rgba(0, 209, 102, 0.3); border-radius: 99px; }
 
-/* ─── TYPOGRAPHY ─────────────────────────────────────────────────────── */
-.font-display { font-family: var(--font-display); }
-
 /* ─── CARDS ──────────────────────────────────────────────────────────── */
 .copa-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 12px;
   transition: border-color 0.2s, background 0.2s;
 }
 .copa-card:hover {
@@ -70,15 +95,15 @@ body {
 
 /* ─── BUTTONS ────────────────────────────────────────────────────────── */
 .copa-btn {
-  font-family: var(--font-display);
+  font-family: 'Oswald', sans-serif;
   font-size: 0.8rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   background: var(--green);
-  color: #07111D;
+  color: var(--bg);
   font-weight: 700;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   padding: 0.45rem 1rem;
   cursor: pointer;
   transition: opacity 0.2s, transform 0.1s;
@@ -91,25 +116,23 @@ body {
   background: transparent;
   color: var(--green);
   border: 1px solid var(--green);
-  font-family: var(--font-display);
+  font-family: 'Oswald', sans-serif;
   font-size: 0.8rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   font-weight: 600;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   padding: 0.4rem 0.9rem;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-.copa-btn-ghost:hover {
-  background: var(--green-dim);
-}
+.copa-btn-ghost:hover { background: var(--green-dim); }
 
 /* ─── BADGES ─────────────────────────────────────────────────────────── */
 .badge-live {
-  background: rgba(239, 68, 68, 0.15);
-  color: #FC8181;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.12);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
   border-radius: 99px;
   font-size: 0.65rem;
   font-weight: 700;
@@ -119,18 +142,18 @@ body {
   animation: pulse 1.5s ease-in-out infinite;
 }
 .badge-finished {
-  background: rgba(255,255,255,0.05);
-  color: var(--text-faint);
-  border: 1px solid var(--border);
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(0, 209, 102, 0.2);
   border-radius: 99px;
   font-size: 0.65rem;
   letter-spacing: 0.06em;
   padding: 2px 8px;
 }
 .badge-scheduled {
-  background: rgba(0,209,102,0.08);
+  background: var(--green-dim);
   color: var(--green);
-  border: 1px solid rgba(0,209,102,0.2);
+  border: 1px solid rgba(0, 209, 102, 0.2);
   border-radius: 99px;
   font-size: 0.65rem;
   letter-spacing: 0.06em;
@@ -142,10 +165,9 @@ body {
   display: flex;
   border-bottom: 1px solid var(--border);
   margin-bottom: 1.5rem;
-  gap: 0;
 }
 .copa-tab {
-  font-family: var(--font-display);
+  font-family: 'Oswald', sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -171,11 +193,11 @@ body {
 .copa-input {
   background: var(--surface);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   color: var(--text);
   padding: 0.45rem 0.75rem;
   font-size: 0.875rem;
-  font-family: var(--font-body);
+  font-family: 'Plus Jakarta Sans', sans-serif;
   width: 100%;
   transition: border-color 0.2s;
 }
@@ -185,22 +207,19 @@ body {
   box-shadow: 0 0 0 3px var(--green-dim);
 }
 .copa-input::placeholder { color: var(--text-faint); }
-.copa-input:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+.copa-input:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ─── SCORE INPUT ────────────────────────────────────────────────────── */
 .score-input {
   width: 3rem;
   height: 3rem;
   text-align: center;
-  font-family: var(--font-display);
+  font-family: 'Oswald', sans-serif;
   font-size: 1.4rem;
   font-weight: 700;
-  background: var(--surface);
+  background: var(--score-bg);
   border: 2px solid var(--border-light);
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   color: var(--text);
   transition: border-color 0.2s, box-shadow 0.2s;
   -moz-appearance: textfield;
@@ -212,31 +231,50 @@ body {
   border-color: var(--green);
   box-shadow: 0 0 0 3px var(--green-dim);
 }
-.score-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  border-color: var(--border);
-}
+.score-input:disabled { opacity: 0.5; cursor: not-allowed; border-color: var(--border); }
 
 /* ─── RANKING MEDALS ─────────────────────────────────────────────────── */
 .medal-1 { color: var(--gold); text-shadow: 0 0 12px var(--gold); }
 .medal-2 { color: var(--silver); }
 .medal-3 { color: var(--bronze); }
 
+/* ─── THEME TOGGLE ───────────────────────────────────────────────────── */
+.theme-toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 99px;
+  border: 1.5px solid var(--border-light);
+  background: var(--surface);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
+  flex-shrink: 0;
+}
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--green);
+  transition: transform 0.3s, background 0.3s;
+}
+[data-theme="light"] .theme-toggle::after {
+  transform: translateX(16px);
+}
+
 /* ─── ANIMATIONS ─────────────────────────────────────────────────────── */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
 }
-
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-.fade-up {
-  animation: fadeUp 0.4s ease both;
-}
+.fade-up { animation: fadeUp 0.4s ease both; }
 .fade-up-1 { animation-delay: 0.05s; }
 .fade-up-2 { animation-delay: 0.10s; }
 .fade-up-3 { animation-delay: 0.15s; }
